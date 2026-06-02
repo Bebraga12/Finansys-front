@@ -1,0 +1,84 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Metas Financeiras</h1>
+    <p class="page-subtitle">Acompanhe seu progresso rumo aos seus objetivos</p>
+  </div>
+  <button class="btn" (click)="openForm()">+ Nova Meta</button>
+</div>
+
+@if (showForm()) {
+  <div class="form-panel">
+    <h3 class="form-title">Nova Meta</h3>
+    <div class="form-grid">
+      <div class="input-group">
+        <label>Título da Meta</label>
+        <input type="text" placeholder="Ex: Reserva de Emergência" [(ngModel)]="form.title" />
+      </div>
+      <div class="input-group">
+        <label>Valor Objetivo (R$)</label>
+        <input type="number" placeholder="0,00" [(ngModel)]="form.targetAmount" min="0" />
+      </div>
+      <div class="input-group">
+        <label>Valor Atual (R$)</label>
+        <input type="number" placeholder="0,00" [(ngModel)]="form.currentAmount" min="0" />
+      </div>
+      <div class="input-group">
+        <label>Prazo</label>
+        <input type="date" [(ngModel)]="form.deadline" />
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn" (click)="save()">Salvar</button>
+      <button class="btn btn-outline" (click)="cancel()">Cancelar</button>
+    </div>
+  </div>
+}
+
+<div class="goals-grid">
+  @for (goal of svc.goals(); track goal.id) {
+    <div class="goal-card" [class.completed]="goal.status === 'completed'" [class.failed]="goal.status === 'failed'">
+      <div class="goal-card-header">
+        <div>
+          <h3 class="goal-title">{{ goal.title }}</h3>
+          <span class="goal-deadline">Prazo: {{ goal.deadline | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="goal-status-badge" [class]="goal.status">
+          {{ goal.status === 'active' ? 'Ativa' : goal.status === 'completed' ? 'Concluída' : 'Encerrada' }}
+        </div>
+      </div>
+
+      <div class="goal-amounts">
+        <div>
+          <span class="amount-label">Atual</span>
+          <span class="amount-value">{{ goal.currentAmount | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="amount-sep">de</div>
+        <div>
+          <span class="amount-label">Objetivo</span>
+          <span class="amount-value target">{{ goal.targetAmount | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <div class="goal-progress">
+        <div class="progress-track">
+          <div class="progress-fill" [style.width.%]="progress(goal)" [class.full]="progress(goal) >= 100"></div>
+        </div>
+        <span class="progress-label">{{ progress(goal) }}%</span>
+      </div>
+
+      <div class="goal-card-footer">
+        <span class="remaining">
+          @if (goal.status !== 'completed') {
+            Faltam: {{ (goal.targetAmount - goal.currentAmount) | currency:'BRL':'symbol':'1.2-2' }}
+          } @else {
+            Meta alcançada!
+          }
+        </span>
+        <button class="action-btn delete" (click)="delete(goal.id)">Excluir</button>
+      </div>
+    </div>
+  }
+  @empty {
+    <div class="empty-state">Nenhuma meta cadastrada. Crie sua primeira meta!</div>
+  }
+</div>

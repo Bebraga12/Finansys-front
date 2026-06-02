@@ -1,0 +1,187 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Perfil</h1>
+    <p class="page-subtitle">Informações da sua conta</p>
+  </div>
+</div>
+
+<div class="profile-layout">
+  <!-- User Card -->
+  <div class="card profile-card">
+    <div class="avatar-section">
+      <div class="avatar">{{ user.name.charAt(0) }}</div>
+      <div class="user-info">
+        <h2 class="user-name">{{ user.name }}</h2>
+        <p class="user-email">{{ user.email }}</p>
+        <span class="join-date">Membro desde {{ user.joinedAt | date:'dd/MM/yyyy' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="card stats-card">
+    <h3 class="card-section-title">Resumo Financeiro</h3>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-label">Total Receitas</span>
+        <span class="stat-value success">{{ svc.totalIncomes | currency:'BRL':'symbol':'1.2-2' }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Total Despesas</span>
+        <span class="stat-value danger">{{ svc.totalExpenses | currency:'BRL':'symbol':'1.2-2' }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Saldo Atual</span>
+        <span class="stat-value">{{ svc.balance | currency:'BRL':'symbol':'1.2-2' }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Metas Cadastradas</span>
+        <span class="stat-value">{{ svc.goals().length }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Lançamentos</span>
+        <span class="stat-value">{{ svc.transactions().length }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Categorias</span>
+        <span class="stat-value">{{ svc.categories.length }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Account Info -->
+  <div class="card info-card">
+    <h3 class="card-section-title">Dados da Conta</h3>
+    <div class="info-list">
+      <div class="info-row">
+        <span class="info-label">Nome completo</span>
+        <span class="info-value">{{ user.name }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">E-mail</span>
+        <span class="info-value">{{ user.email }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Data de cadastro</span>
+        <span class="info-value">{{ user.joinedAt | date:'dd/MM/yyyy' }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Plano</span>
+        <span class="info-value"><span class="badge-plan">Basic</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Premium Banner -->
+  <div class="premium-banner">
+    <div class="premium-left">
+      <span class="premium-icon">★</span>
+      <div class="premium-text">
+        <strong>Upgrade para o Plano Premium</strong>
+        <span>Desbloqueie relatórios avançados, metas ilimitadas e exportação de dados.</span>
+      </div>
+    </div>
+    <button class="btn btn-premium" (click)="openModal()">Melhorar Plano</button>
+  </div>
+</div>
+
+<!-- Plans Modal -->
+@if (showPlansModal()) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">Escolha seu Plano</h2>
+          <p class="modal-subtitle">Selecione o plano ideal para o seu controle financeiro</p>
+        </div>
+        <button class="modal-close" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="plans-grid">
+
+        <!-- Basic -->
+        <div class="plan-card">
+          <div class="plan-header">
+            <span class="plan-name">Basic</span>
+            <div class="plan-price">
+              <span class="price-currency">R$</span>
+              <span class="price-value">7,90</span>
+              <span class="price-period">/mês</span>
+            </div>
+          </div>
+          <ul class="plan-features">
+            <li class="feature included">
+              <span class="check">✓</span> Metas ilimitadas
+            </li>
+            <li class="feature included">
+              <span class="check">✓</span> Relatórios — apenas gráfico mensal
+            </li>
+            <li class="feature excluded">
+              <span class="cross">✕</span> Relatórios completos
+            </li>
+            <li class="feature excluded">
+              <span class="cross">✕</span> Comparação entre meses
+            </li>
+          </ul>
+          <button class="btn plan-btn plan-btn-outline">Assinar Basic</button>
+        </div>
+
+        <!-- Premium (destaque) -->
+        <div class="plan-card plan-card--featured">
+          <div class="plan-badge">Mais Popular</div>
+          <div class="plan-header">
+            <span class="plan-name">Premium</span>
+            <div class="plan-price">
+              <span class="price-currency">R$</span>
+              <span class="price-value">17,90</span>
+              <span class="price-period">/mês</span>
+            </div>
+          </div>
+          <ul class="plan-features">
+            <li class="feature included">
+              <span class="check">✓</span> Metas ilimitadas
+            </li>
+            <li class="feature included">
+              <span class="check">✓</span> Relatórios completos mensais
+            </li>
+            <li class="feature included">
+              <span class="check">✓</span> Todos os gráficos
+            </li>
+            <li class="feature excluded">
+              <span class="cross">✕</span> Comparação entre meses
+            </li>
+          </ul>
+          <button class="btn plan-btn plan-btn-primary">Assinar Premium</button>
+        </div>
+
+        <!-- Premium+ -->
+        <div class="plan-card">
+          <div class="plan-header">
+            <span class="plan-name">Premium <span class="plus">+</span></span>
+            <div class="plan-price">
+              <span class="price-currency">R$</span>
+              <span class="price-value">29,90</span>
+              <span class="price-period">/mês</span>
+            </div>
+          </div>
+          <ul class="plan-features">
+            <li class="feature included">
+              <span class="check">✓</span> Metas ilimitadas
+            </li>
+            <li class="feature included">
+              <span class="check">✓</span> Relatórios completos mensais
+            </li>
+            <li class="feature included">
+              <span class="check">✓</span> Todos os gráficos
+            </li>
+            <li class="feature included">
+              <span class="check">✓</span> Comparação entre meses
+            </li>
+          </ul>
+          <button class="btn plan-btn plan-btn-outline">Assinar Premium+</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+}

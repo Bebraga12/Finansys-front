@@ -1,0 +1,120 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Visão geral das suas finanças — Junho 2026</p>
+  </div>
+  <div class="page-actions">
+    <a routerLink="/incomes" class="btn btn-success">+ Nova Receita</a>
+    <a routerLink="/expenses" class="btn btn-danger">+ Nova Despesa</a>
+  </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="summary-grid">
+  <div class="card card-primary">
+    <div class="card-label">Saldo do Mês</div>
+    <div class="card-value" [class.success]="svc.balance >= 0" [class.danger]="svc.balance < 0">
+      {{ svc.balance | currency:'BRL':'symbol':'1.2-2' }}
+    </div>
+    <div class="card-sub">Receitas − Despesas de Junho</div>
+  </div>
+  <div class="card card-success">
+    <div class="card-label">Receitas do Mês</div>
+    <div class="card-value success">{{ svc.totalIncomes | currency:'BRL':'symbol':'1.2-2' }}</div>
+    <div class="card-sub">{{ currentMonthIncomes.length }} lançamentos em Junho</div>
+  </div>
+  <div class="card card-danger">
+    <div class="card-label">Despesas do Mês</div>
+    <div class="card-value danger">{{ svc.totalExpenses | currency:'BRL':'symbol':'1.2-2' }}</div>
+    <div class="card-sub">{{ currentMonthExpenses.length }} lançamentos em Junho</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Metas Ativas</div>
+    <div class="card-value">{{ activeGoals }}</div>
+    <div class="card-sub">de {{ svc.goals().length }} metas cadastradas</div>
+  </div>
+</div>
+
+<!-- Charts Row -->
+<div class="charts-row">
+  <!-- Bar Chart -->
+  <div class="card chart-card">
+    <div class="card-header-inner">
+      <h3>Receitas × Despesas (Jan–Jun 2026)</h3>
+    </div>
+    <div class="bar-chart">
+      @for (month of monthlyReport; track month.month) {
+        <div class="bar-group">
+          <div class="bars">
+            <div class="bar income-bar" [style.height.%]="barH(month.income)"
+                 [title]="'Receita: R$ ' + month.income"></div>
+            <div class="bar expense-bar" [style.height.%]="barH(month.expense)"
+                 [title]="'Despesa: R$ ' + month.expense"></div>
+          </div>
+          <span class="bar-label">{{ month.month }}</span>
+        </div>
+      }
+    </div>
+    <div class="chart-legend">
+      <span class="legend-item income"><span class="dot"></span>Receitas</span>
+      <span class="legend-item expense"><span class="dot"></span>Despesas</span>
+    </div>
+  </div>
+
+  <!-- Category breakdown -->
+  <div class="card chart-card">
+    <div class="card-header-inner">
+      <h3>Despesas por Categoria — Junho</h3>
+    </div>
+    <div class="category-list">
+      @for (cat of expensesByCategory; track cat.category) {
+        <div class="category-item">
+          <div class="cat-info">
+            <span class="cat-name">{{ cat.category }}</span>
+            <span class="cat-value danger">{{ cat.total | currency:'BRL':'symbol':'1.2-2' }}</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" [style.width.%]="cat.percent"></div>
+          </div>
+          <span class="cat-percent">{{ cat.percent }}%</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Recent Transactions -->
+<div class="card transactions-card">
+  <div class="card-header-inner">
+    <h3>Movimentações de Junho</h3>
+    <a routerLink="/reports" class="link-action">Ver relatório completo</a>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Descrição</th>
+        <th>Categoria</th>
+        <th>Tipo</th>
+        <th class="text-right">Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (t of recentTransactions; track t.id) {
+        <tr>
+          <td class="muted">{{ t.date | date:'dd/MM/yyyy' }}</td>
+          <td>{{ t.description }}</td>
+          <td><span class="badge">{{ t.category }}</span></td>
+          <td>
+            <span class="type-tag" [class.income]="t.type === 'income'" [class.expense]="t.type === 'expense'">
+              {{ t.type === 'income' ? 'Receita' : 'Despesa' }}
+            </span>
+          </td>
+          <td class="text-right" [class.success]="t.type === 'income'" [class.danger]="t.type === 'expense'">
+            {{ t.type === 'income' ? '+' : '−' }} {{ t.value | currency:'BRL':'symbol':'1.2-2' }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

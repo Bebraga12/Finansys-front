@@ -1,0 +1,85 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Receitas</h1>
+    <p class="page-subtitle">Gerencie suas entradas financeiras</p>
+  </div>
+  <button class="btn btn-success" (click)="openForm()">+ Nova Receita</button>
+</div>
+
+<!-- Summary -->
+<div class="summary-row">
+  <div class="summary-item">
+    <span class="s-label">Total de Receitas</span>
+    <span class="s-value success">{{ svc.totalIncomes | currency:'BRL':'symbol':'1.2-2' }}</span>
+  </div>
+  <div class="summary-item">
+    <span class="s-label">Lançamentos</span>
+    <span class="s-value">{{ svc.incomes.length }}</span>
+  </div>
+</div>
+
+<!-- Form -->
+@if (showForm()) {
+  <div class="form-panel">
+    <h3 class="form-title">{{ editingId() ? 'Editar Receita' : 'Nova Receita' }}</h3>
+    <div class="form-grid">
+      <div class="input-group">
+        <label>Descrição</label>
+        <input type="text" placeholder="Ex: Salário, Freelance..." [(ngModel)]="form.description" />
+      </div>
+      <div class="input-group">
+        <label>Valor (R$)</label>
+        <input type="number" placeholder="0,00" [(ngModel)]="form.value" min="0" step="0.01" />
+      </div>
+      <div class="input-group">
+        <label>Categoria</label>
+        <select [(ngModel)]="form.category">
+          <option value="" disabled>Selecione...</option>
+          @for (cat of incomeCategories; track cat.id) {
+            <option [value]="cat.name">{{ cat.name }}</option>
+          }
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Data</label>
+        <input type="date" [(ngModel)]="form.date" />
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-success" (click)="save()">Salvar</button>
+      <button class="btn btn-outline" (click)="cancel()">Cancelar</button>
+    </div>
+  </div>
+}
+
+<!-- Table -->
+<div class="card table-card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Descrição</th>
+        <th>Categoria</th>
+        <th class="text-right">Valor</th>
+        <th class="text-center">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (t of svc.incomes; track t.id) {
+        <tr>
+          <td class="muted">{{ t.date | date:'dd/MM/yyyy' }}</td>
+          <td>{{ t.description }}</td>
+          <td><span class="badge">{{ t.category }}</span></td>
+          <td class="text-right success">+ {{ t.value | currency:'BRL':'symbol':'1.2-2' }}</td>
+          <td class="text-center">
+            <button class="action-btn edit" (click)="edit(t)">Editar</button>
+            <button class="action-btn delete" (click)="delete(t.id)">Excluir</button>
+          </td>
+        </tr>
+      }
+      @empty {
+        <tr><td colspan="5" class="empty-row">Nenhuma receita cadastrada.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>

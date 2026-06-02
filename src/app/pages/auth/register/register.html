@@ -1,0 +1,45 @@
+<div class="auth-page">
+  <div class="auth-brand">
+    <img src="logo.png" alt="FinanSys" class="brand-logo-img" />
+    <p class="brand-tagline">Controle financeiro simples e eficiente</p>
+  </div>
+
+  <div class="auth-card">
+    <div class="auth-card-header">
+      <h2>Criar conta</h2>
+      <p>Preencha os dados para se cadastrar</p>
+    </div>
+
+    <form class="auth-form" (ngSubmit)="submit()">
+      @if (errorMsg) {
+        <div class="alert alert-danger">{{ errorMsg }}</div>
+      }
+
+      <div class="input-group">
+        <label for="name">Nome completo</label>
+        <input type="text" id="name" placeholder="Seu nome" [(ngModel)]="name" name="name" />
+      </div>
+
+      <div class="input-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" placeholder="seu@email.com" [(ngModel)]="email" name="email" />
+      </div>
+
+      <div class="input-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" placeholder="Mínimo 6 caracteres" [(ngModel)]="password" name="password" />
+      </div>
+
+      <div class="input-group">
+        <label for="confirmPassword">Confirmar senha</label>
+        <input type="password" id="confirmPassword" placeholder="Repita a senha" [(ngModel)]="confirmPassword" name="confirmPassword" />
+      </div>
+
+      <button type="submit" class="btn btn-full">Cadastrar</button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Já tem uma conta? <a routerLink="/login">Faça login</a></p>
+    </div>
+  </div>
+</div>

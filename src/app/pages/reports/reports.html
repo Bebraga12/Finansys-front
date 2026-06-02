@@ -1,0 +1,129 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Relatórios</h1>
+    <p class="page-subtitle">Análise detalhada das suas finanças</p>
+  </div>
+</div>
+
+<!-- Monthly Summary Table -->
+<div class="card section-card">
+  <h3 class="section-title">Resumo Mensal — 2026</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Mês</th>
+        <th class="text-right">Receitas</th>
+        <th class="text-right">Despesas</th>
+        <th class="text-right">Saldo</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of monthlyData; track row.month) {
+        <tr>
+          <td class="month-cell">{{ row.month }}</td>
+          <td class="text-right success">{{ row.income | currency:'BRL':'symbol':'1.2-2' }}</td>
+          <td class="text-right danger">{{ row.expense | currency:'BRL':'symbol':'1.2-2' }}</td>
+          <td class="text-right" [class.success]="row.balance >= 0" [class.danger]="row.balance < 0">
+            {{ row.balance | currency:'BRL':'symbol':'1.2-2' }}
+          </td>
+        </tr>
+      }
+    </tbody>
+    <tfoot>
+      <tr class="total-row">
+        <td>Total</td>
+        <td class="text-right success">
+          {{ totalInYear('income') | currency:'BRL':'symbol':'1.2-2' }}
+        </td>
+        <td class="text-right danger">
+          {{ totalInYear('expense') | currency:'BRL':'symbol':'1.2-2' }}
+        </td>
+        <td class="text-right">—</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<!-- Bar Chart -->
+<div class="card section-card">
+  <h3 class="section-title">Gráfico Mensal — Receitas × Despesas</h3>
+  <div class="bar-chart">
+    @for (row of monthlyData; track row.month) {
+      <div class="bar-group">
+        <div class="bars">
+          <div class="bar income-bar" [style.height.%]="barH(row.income, maxBarValue(monthlyData))" [title]="'Receita: R$ ' + row.income"></div>
+          <div class="bar expense-bar" [style.height.%]="barH(row.expense, maxBarValue(monthlyData))" [title]="'Despesa: R$ ' + row.expense"></div>
+        </div>
+        <span class="bar-label">{{ row.month }}</span>
+      </div>
+    }
+  </div>
+  <div class="chart-legend">
+    <span class="legend-item income"><span class="dot"></span>Receitas</span>
+    <span class="legend-item expense"><span class="dot"></span>Despesas</span>
+  </div>
+</div>
+
+<!-- Category Breakdown -->
+<div class="card section-card">
+  <h3 class="section-title">Despesas por Categoria</h3>
+  <div class="category-bars">
+    @for (cat of categoryData; track cat.category) {
+      <div class="cat-row">
+        <span class="cat-name">{{ cat.category }}</span>
+        <div class="cat-bar-track">
+          <div class="cat-bar-fill" [style.width.%]="cat.percent"></div>
+        </div>
+        <span class="cat-pct">{{ cat.percent }}%</span>
+        <span class="cat-val danger">{{ cat.total | currency:'BRL':'symbol':'1.2-2' }}</span>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Transactions with Filter -->
+<div class="card section-card">
+  <div class="section-header">
+    <h3 class="section-title">Movimentações</h3>
+    <div class="input-group filter-group">
+      <select [ngModel]="selectedCategory()" (ngModelChange)="selectedCategory.set($event)">
+        <option value="">Todas as categorias</option>
+        @for (cat of allCategories; track cat) {
+          <option [value]="cat">{{ cat }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Descrição</th>
+        <th>Categoria</th>
+        <th>Tipo</th>
+        <th class="text-right">Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (t of filteredTransactions; track t.id) {
+        <tr>
+          <td class="muted">{{ t.date }}</td>
+          <td>{{ t.description }}</td>
+          <td><span class="badge">{{ t.category }}</span></td>
+          <td>
+            <span class="type-tag" [class.income]="t.type === 'income'" [class.expense]="t.type === 'expense'">
+              {{ t.type === 'income' ? 'Receita' : 'Despesa' }}
+            </span>
+          </td>
+          <td class="text-right" [class.success]="t.type === 'income'" [class.danger]="t.type === 'expense'">
+            {{ t.type === 'income' ? '+' : '−' }} {{ t.value | currency:'BRL':'symbol':'1.2-2' }}
+          </td>
+        </tr>
+      }
+      @empty {
+        <tr><td colspan="5" class="empty-row">Nenhum lançamento encontrado.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>
