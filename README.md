@@ -36,24 +36,6 @@ ng build
 
 Isso irá compilar o projeto e armazenar os artefatos de build no diretório `dist/`. Por padrão, o build de produção otimiza a aplicação para melhor desempenho e velocidade.
 
-## Executando testes unitários
-
-Para executar os testes unitários com o test runner [Vitest](https://vitest.dev/), use o seguinte comando:
-
-```bash
-ng test
-```
-
-## Executando testes end-to-end
-
-Para executar testes end-to-end (e2e), execute:
-
-```bash
-ng e2e
-```
-
-O Angular CLI não vem com um framework de testes end-to-end por padrão. Você pode escolher um que atenda às suas necessidades.
-
 ## Recursos adicionais
 
 Para mais informações sobre como usar o Angular CLI, incluindo referências detalhadas de comandos, acesse a página [Visão geral e referência de comandos do Angular CLI](https://angular.dev/tools/cli).
