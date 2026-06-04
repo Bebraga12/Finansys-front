@@ -89,6 +89,31 @@
   }
 }
 
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    width: 100%;
+    padding-right: 2.75rem;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--text-muted-color);
+    display: flex;
+    align-items: center;
+
+    &:hover { color: var(--text-color); }
+  }
+}
+
 .mock-hint {
   margin-top: 1.25rem;
   padding: 0.625rem;

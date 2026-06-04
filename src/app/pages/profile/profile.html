@@ -13,7 +13,7 @@
       <div class="user-info">
         <h2 class="user-name">{{ user.name }}</h2>
         <p class="user-email">{{ user.email }}</p>
-        <span class="join-date">Membro desde {{ user.joinedAt | date:'dd/MM/yyyy' }}</span>
+        <span class="join-date">Cadastrado em: {{ user.createdAt | date:'dd/MM/yyyy' }}</span>
       </div>
     </div>
   </div>
@@ -44,7 +44,7 @@
       </div>
       <div class="stat-item">
         <span class="stat-label">Categorias</span>
-        <span class="stat-value">{{ svc.categories.length }}</span>
+        <span class="stat-value">{{ svc.categories().length }}</span>
       </div>
     </div>
   </div>
@@ -63,11 +63,11 @@
       </div>
       <div class="info-row">
         <span class="info-label">Data de cadastro</span>
-        <span class="info-value">{{ user.joinedAt | date:'dd/MM/yyyy' }}</span>
+        <span class="info-value">{{ user.createdAt | date:'dd/MM/yyyy' }}</span>
       </div>
       <div class="info-row">
         <span class="info-label">Plano</span>
-        <span class="info-value"><span class="badge-plan">Basic</span></span>
+        <span class="info-value"><span class="badge-plan">{{ user.plan }}</span></span>
       </div>
     </div>
   </div>
@@ -77,11 +77,11 @@
     <div class="premium-left">
       <span class="premium-icon">★</span>
       <div class="premium-text">
-        <strong>Upgrade para o Plano Premium</strong>
-        <span>Desbloqueie relatórios avançados, metas ilimitadas e exportação de dados.</span>
+        <strong>Gerencie seu Plano</strong>
+        <span>Desbloqueie relatórios avançados, gráficos completos e análises financeiras.</span>
       </div>
     </div>
-    <button class="btn btn-premium" (click)="openModal()">Melhorar Plano</button>
+    <button class="btn btn-premium" (click)="openModal()">Ver Planos</button>
   </div>
 </div>
 
@@ -100,7 +100,7 @@
       <div class="plans-grid">
 
         <!-- Basic -->
-        <div class="plan-card">
+        <div class="plan-card" [class.plan-card--current]="isPlan('BASIC')">
           <div class="plan-header">
             <span class="plan-name">Basic</span>
             <div class="plan-price">
@@ -110,24 +110,20 @@
             </div>
           </div>
           <ul class="plan-features">
-            <li class="feature included">
-              <span class="check">✓</span> Metas ilimitadas
-            </li>
-            <li class="feature included">
-              <span class="check">✓</span> Relatórios — apenas gráfico mensal
-            </li>
-            <li class="feature excluded">
-              <span class="cross">✕</span> Relatórios completos
-            </li>
-            <li class="feature excluded">
-              <span class="cross">✕</span> Comparação entre meses
-            </li>
+            <li class="feature included"><span class="check">✓</span> Metas ilimitadas</li>
+            <li class="feature included"><span class="check">✓</span> Relatórios — apenas gráfico mensal</li>
+            <li class="feature excluded"><span class="cross">✕</span> Relatórios completos</li>
+            <li class="feature excluded"><span class="cross">✕</span> Comparação entre meses</li>
           </ul>
-          <button class="btn plan-btn plan-btn-outline">Assinar Basic</button>
+          @if (isPlan('BASIC')) {
+            <button class="btn plan-btn plan-btn-current" disabled>Plano atual</button>
+          } @else {
+            <button class="btn plan-btn plan-btn-outline" (click)="selectPlan('BASIC')">Escolher Basic</button>
+          }
         </div>
 
         <!-- Premium (destaque) -->
-        <div class="plan-card plan-card--featured">
+        <div class="plan-card plan-card--featured" [class.plan-card--current]="isPlan('PREMIUM')">
           <div class="plan-badge">Mais Popular</div>
           <div class="plan-header">
             <span class="plan-name">Premium</span>
@@ -138,24 +134,20 @@
             </div>
           </div>
           <ul class="plan-features">
-            <li class="feature included">
-              <span class="check">✓</span> Metas ilimitadas
-            </li>
-            <li class="feature included">
-              <span class="check">✓</span> Relatórios completos mensais
-            </li>
-            <li class="feature included">
-              <span class="check">✓</span> Todos os gráficos
-            </li>
-            <li class="feature excluded">
-              <span class="cross">✕</span> Comparação entre meses
-            </li>
+            <li class="feature included"><span class="check">✓</span> Metas ilimitadas</li>
+            <li class="feature included"><span class="check">✓</span> Relatórios completos mensais</li>
+            <li class="feature included"><span class="check">✓</span> Todos os gráficos</li>
+            <li class="feature excluded"><span class="cross">✕</span> Comparação entre meses</li>
           </ul>
-          <button class="btn plan-btn plan-btn-primary">Assinar Premium</button>
+          @if (isPlan('PREMIUM')) {
+            <button class="btn plan-btn plan-btn-current" disabled>Plano atual</button>
+          } @else {
+            <button class="btn plan-btn plan-btn-primary" (click)="selectPlan('PREMIUM')">Escolher Premium</button>
+          }
         </div>
 
         <!-- Premium+ -->
-        <div class="plan-card">
+        <div class="plan-card" [class.plan-card--current]="isPlan('PREMIUM_PLUS')">
           <div class="plan-header">
             <span class="plan-name">Premium <span class="plus">+</span></span>
             <div class="plan-price">
@@ -165,20 +157,16 @@
             </div>
           </div>
           <ul class="plan-features">
-            <li class="feature included">
-              <span class="check">✓</span> Metas ilimitadas
-            </li>
-            <li class="feature included">
-              <span class="check">✓</span> Relatórios completos mensais
-            </li>
-            <li class="feature included">
-              <span class="check">✓</span> Todos os gráficos
-            </li>
-            <li class="feature included">
-              <span class="check">✓</span> Comparação entre meses
-            </li>
+            <li class="feature included"><span class="check">✓</span> Metas ilimitadas</li>
+            <li class="feature included"><span class="check">✓</span> Relatórios completos mensais</li>
+            <li class="feature included"><span class="check">✓</span> Todos os gráficos</li>
+            <li class="feature included"><span class="check">✓</span> Comparação entre meses</li>
           </ul>
-          <button class="btn plan-btn plan-btn-outline">Assinar Premium+</button>
+          @if (isPlan('PREMIUM_PLUS')) {
+            <button class="btn plan-btn plan-btn-current" disabled>Plano atual</button>
+          } @else {
+            <button class="btn plan-btn plan-btn-outline" (click)="selectPlan('PREMIUM_PLUS')">Escolher Premium+</button>
+          }
         </div>
 
       </div>

@@ -13,7 +13,7 @@ export class Header {
   private financialService = inject(FinancialService);
 
   get userName(): string {
-    return this.financialService.currentUser.name;
+    return this.financialService.currentUser().name;
   }
 
   logout(): void {

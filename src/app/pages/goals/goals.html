@@ -74,7 +74,12 @@
             Meta alcançada!
           }
         </span>
-        <button class="action-btn delete" (click)="delete(goal.id)">Excluir</button>
+        <div style="display:flex;gap:8px">
+          @if (goal.status === 'active') {
+            <button class="action-btn edit" (click)="openDepositModal(goal)">+ Adicionar</button>
+          }
+          <button class="action-btn delete" (click)="delete(goal.id)">Excluir</button>
+        </div>
       </div>
     </div>
   }
@@ -82,3 +87,23 @@
     <div class="empty-state">Nenhuma meta cadastrada. Crie sua primeira meta!</div>
   }
 </div>
+
+<!-- Modal Depósito -->
+@if (showDepositModal()) {
+  <div class="modal-overlay" (click)="closeDepositModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">Adicionar à Meta</h2>
+        <button class="modal-close" (click)="closeDepositModal()">✕</button>
+      </div>
+      <div class="input-group" style="margin-bottom:16px">
+        <label>Valor a adicionar (R$)</label>
+        <input type="number" placeholder="0,00" [(ngModel)]="deposit.amount" min="0.01" step="0.01" />
+      </div>
+      <div class="form-actions">
+        <button class="btn" (click)="saveDeposit()">Confirmar</button>
+        <button class="btn btn-outline" (click)="closeDepositModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+}

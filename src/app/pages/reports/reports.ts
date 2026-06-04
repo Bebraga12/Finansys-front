@@ -1,11 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { FinancialService } from '../../core/services/financial';
 
 @Component({
   selector: 'app-reports',
-  imports: [CommonModule, FormsModule, CurrencyPipe],
+  imports: [CommonModule, FormsModule, CurrencyPipe, RouterLink],
   templateUrl: './reports.html',
   styleUrl: './reports.scss',
 })
@@ -13,6 +14,14 @@ export class Reports {
   protected svc = inject(FinancialService);
 
   selectedCategory = signal('');
+
+  get isBasic(): boolean {
+    return this.svc.currentUser().plan === 'BASIC';
+  }
+
+  get isPremiumPlus(): boolean {
+    return this.svc.currentUser().plan === 'PREMIUM_PLUS';
+  }
 
   get monthlyData() {
     return this.svc.monthlyReport();

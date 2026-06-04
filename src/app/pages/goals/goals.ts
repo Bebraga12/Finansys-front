@@ -14,6 +14,8 @@ export class Goals {
   protected svc = inject(FinancialService);
 
   showForm = signal(false);
+  showDepositModal = signal(false);
+  depositGoalId = signal<string | null>(null);
 
   form = {
     title: '',
@@ -21,6 +23,10 @@ export class Goals {
     currentAmount: 0,
     deadline: '',
     status: 'active' as Goal['status'],
+  };
+
+  deposit = {
+    amount: 0,
   };
 
   progress(goal: Goal): number {
@@ -44,5 +50,23 @@ export class Goals {
 
   cancel(): void {
     this.showForm.set(false);
+  }
+
+  openDepositModal(goal: Goal): void {
+    this.depositGoalId.set(goal.id);
+    this.deposit = { amount: 0 };
+    this.showDepositModal.set(true);
+  }
+
+  closeDepositModal(): void {
+    this.showDepositModal.set(false);
+    this.depositGoalId.set(null);
+  }
+
+  saveDeposit(): void {
+    const id = this.depositGoalId();
+    if (!id || !this.deposit.amount || this.deposit.amount <= 0) return;
+    this.svc.depositGoal(id, this.deposit.amount);
+    this.closeDepositModal();
   }
 }

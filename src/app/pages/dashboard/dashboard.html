@@ -38,28 +38,39 @@
 <!-- Charts Row -->
 <div class="charts-row">
   <!-- Bar Chart -->
-  <div class="card chart-card">
-    <div class="card-header-inner">
-      <h3>Receitas × Despesas (Jan–Jun 2026)</h3>
-    </div>
-    <div class="bar-chart">
-      @for (month of monthlyReport; track month.month) {
-        <div class="bar-group">
-          <div class="bars">
-            <div class="bar income-bar" [style.height.%]="barH(month.income)"
-                 [title]="'Receita: R$ ' + month.income"></div>
-            <div class="bar expense-bar" [style.height.%]="barH(month.expense)"
-                 [title]="'Despesa: R$ ' + month.expense"></div>
+  @if (isPremiumPlus) {
+    <div class="card chart-card">
+      <div class="card-header-inner">
+        <h3>Receitas × Despesas (Jan–Jun 2026)</h3>
+      </div>
+      <div class="bar-chart">
+        @for (month of monthlyReport; track month.month) {
+          <div class="bar-group">
+            <div class="bars">
+              <div class="bar income-bar" [style.height.%]="barH(month.income)"
+                   [title]="'Receita: R$ ' + month.income"></div>
+              <div class="bar expense-bar" [style.height.%]="barH(month.expense)"
+                   [title]="'Despesa: R$ ' + month.expense"></div>
+            </div>
+            <span class="bar-label">{{ month.month }}</span>
           </div>
-          <span class="bar-label">{{ month.month }}</span>
-        </div>
-      }
+        }
+      </div>
+      <div class="chart-legend">
+        <span class="legend-item income"><span class="dot"></span>Receitas</span>
+        <span class="legend-item expense"><span class="dot"></span>Despesas</span>
+      </div>
     </div>
-    <div class="chart-legend">
-      <span class="legend-item income"><span class="dot"></span>Receitas</span>
-      <span class="legend-item expense"><span class="dot"></span>Despesas</span>
+  } @else {
+    <div class="card chart-card upgrade-banner">
+      <div class="upgrade-icon">🔒</div>
+      <div class="upgrade-text">
+        <strong>Gráfico Mensal disponível apenas no plano Premium+</strong>
+        <span>Compare receitas e despesas dos últimos meses.</span>
+      </div>
+      <a routerLink="/perfil" [queryParams]="{openPlans: 'true'}" class="btn btn-upgrade">Fazer Upgrade</a>
     </div>
-  </div>
+  }
 
   <!-- Category breakdown -->
   <div class="card chart-card">

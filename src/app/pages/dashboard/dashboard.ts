@@ -13,6 +13,10 @@ import { FinancialService } from '../../core/services/financial';
 export class Dashboard {
   protected svc = inject(FinancialService);
 
+  get isPremiumPlus(): boolean {
+    return this.svc.currentUser().plan === 'PREMIUM_PLUS';
+  }
+
   get currentMonthIncomes() {
     return this.svc.currentMonthTransactions.filter(t => t.type === 'income');
   }
