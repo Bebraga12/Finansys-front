@@ -28,6 +28,10 @@ export class Login {
   }
 
   submit(): void {
+    if (this.loading) {
+      return;
+    }
+
     this.errorMsg = '';
 
     if (!this.email || !this.password) {

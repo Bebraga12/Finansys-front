@@ -11,7 +11,15 @@
 }
 
 .card { background: var(--surface-color); border: 1px solid var(--border-color); }
-.section-card { padding: 1.5rem; margin-bottom: 1.5rem; }
+.section-card {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    overflow-x: auto;
+  }
+}
 
 .section-header {
   display: flex;
@@ -32,12 +40,21 @@
 .filter-group {
   margin-bottom: 0;
   select { min-width: 200px; }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    select { width: 100%; }
+  }
 }
 
 /* Table */
 .table {
   width: 100%;
   border-collapse: collapse;
+
+  @media (max-width: 768px) {
+    min-width: 560px;
+  }
 
   th, td {
     padding: 0.75rem 1rem;
@@ -81,6 +98,10 @@ tfoot .total-row {
   padding-bottom: 1.75rem;
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 1rem;
+
+  @media (max-width: 600px) {
+    overflow-x: auto;
+  }
 }
 
 .bar-group {
@@ -89,6 +110,10 @@ tfoot .total-row {
   align-items: center;
   flex: 1;
   height: 100%;
+
+  @media (max-width: 600px) {
+    flex: 0 0 48px;
+  }
 
   .bars {
     display: flex;
@@ -149,6 +174,15 @@ tfoot .total-row {
   .cat-pct { font-size: 0.78rem; color: var(--text-muted-color); width: 36px; text-align: right; }
   .cat-val { font-size: 0.825rem; font-weight: 600; width: 120px; text-align: right; }
   .danger  { color: var(--danger-color); }
+
+  @media (max-width: 600px) {
+    flex-wrap: wrap;
+
+    .cat-name { width: 100%; }
+    .cat-bar-track { order: 2; flex: 1 1 auto; }
+    .cat-pct { order: 3; }
+    .cat-val { order: 4; width: auto; margin-left: auto; }
+  }
 }
 
 /* Badges */
@@ -203,6 +237,15 @@ tfoot .total-row {
     cursor: pointer;
     text-decoration: none;
     &:hover { opacity: 0.88; }
+  }
+
+  @media (max-width: 480px) {
+    flex-wrap: wrap;
+
+    .btn-upgrade {
+      width: 100%;
+      text-align: center;
+    }
   }
 }
 
