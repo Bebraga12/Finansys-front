@@ -17,6 +17,10 @@
     width: 220px;
     display: block;
     margin: 0 auto 0.75rem;
+
+    @media (max-width: 380px) {
+      width: 160px;
+    }
   }
 
   .brand-tagline {
@@ -32,6 +36,10 @@
   width: 100%;
   max-width: 420px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+
+  @media (max-width: 380px) {
+    padding: 1.5rem 1.25rem;
+  }
 }
 
 .auth-card-header {

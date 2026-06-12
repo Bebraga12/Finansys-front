@@ -17,6 +17,10 @@
     width: 220px;
     display: block;
     margin: 0 auto 0.75rem;
+
+    @media (max-width: 380px) {
+      width: 160px;
+    }
   }
 
   .brand-tagline {
@@ -32,6 +36,10 @@
   width: 100%;
   max-width: 420px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+
+  @media (max-width: 380px) {
+    padding: 1.5rem 1.25rem;
+  }
 }
 
 .auth-card-header {
@@ -61,6 +69,25 @@
   margin-top: 0.75rem;
   padding: 0.875rem;
   font-size: 0.95rem;
+}
+
+.login-submit {
+  min-height: 3rem;
+
+  &:disabled {
+    opacity: 0.88;
+    cursor: wait;
+  }
+}
+
+.login-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  border-top-color: #ffffff;
+  border-right-color: #ffffff;
+  animation: login-spin 0.75s linear infinite;
+  flex-shrink: 0;
 }
 
 .auth-footer {
@@ -111,6 +138,21 @@
     align-items: center;
 
     &:hover { color: var(--text-color); }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+  }
+}
+
+@keyframes login-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
   }
 }
 
